@@ -50,7 +50,19 @@ export const register = catchAsyncError(async (req , res ,next) => {
             ))
         }
 
-    }catch (error) {
+        const userData = {
+            name, email, phone, password
+        }
 
+        const user =  await User.create(userData);
+        const verificationCode = await user.generateVerificationCode();
+        await user.save();
+        sendVerificationCode(verificationMethod,verificationCode, email,phone);
+        res.status(200).json({
+            success : true,
+        });
+
+    }catch (error) {
+        next(error); 
     }
 })
