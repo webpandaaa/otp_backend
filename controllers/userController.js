@@ -68,7 +68,7 @@ export const register = catchAsyncError(async (req , res ,next) => {
     }
 })
 
-async function sendVerificationCode(verificationMethod,verificationCode, email,phone){
+async function sendVerificationCode(verificationMethod,verificationCode, email, phone){
     if(verificationMethod === "email"){
         const message = generateEmailTemplate(verificationCode);
         sendEmail({email , subject : "Your Verification Code" , message});
