@@ -51,15 +51,27 @@ export const register = catchAsyncError(async (req , res ,next) => {
             ))
         }
 
-    }catch (error) {
+        const userData = {
+            name, email, phone, password
+        }
 
+        const user =  await User.create(userData);
+        const verificationCode = await user.generateVerificationCode();
+        await user.save();
+        sendVerificationCode(verificationMethod,verificationCode, email,phone);
+        res.status(200).json({
+            success : true,
+        });
+
+    }catch (error) {
+        next(error); 
     }
 })
 
 async function sendVerificationCode(verificationMethod,verificationCode, email,phone){
     if(verificationMethod === "email"){
         const message = generateEmailTemplate(verificationCode);
-        sendEmail({email , subject : "Your Verification Code" , message}); 
+        sendEmail({email , subject : "Your Verification Code" , message});
     }
 }
 
